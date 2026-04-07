@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Leitor de PDF com Memória e Anotações</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    </script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<div class="app">
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <h3>📁 Repositório Local</h3>
+            <button id="select-folder-btn" class="folder-btn">📂 Selecionar Pasta</button>
+            <div style="margin-top: 12px;">
+                <strong>📄 PDFs encontrados</strong>
+                <ul id="pdf-list" class="pdf-list"></ul>
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <h3>🔖 Marcadores (Bookmarks)</h3>
+            <button id="add-bookmark-btn" class="btn-add">➕ Adicionar marcador nesta página</button>
+            <ul id="bookmarks-list" class="bookmarks-list"></ul>
+        </div>
+        <div class="sidebar-section">
+            <h3>✍️ Trechos marcados</h3>
+            <button id="add-highlight-btn" class="btn-add">✨ Salvar trecho selecionado</button>
+            <ul id="highlights-list" class="highlights-list"></ul>
+            <div style="font-size: 0.7rem; margin-top: 8px; opacity: 0.7;">🔍 Selecione texto no PDF e clique em "Salvar trecho"</div>
+        </div>
+    </div>
+
+    <div class="viewer">
+        <div class="toolbar">
+            <div class="pdf-title" id="pdf-title">Nenhum PDF aberto</div>
+            <div class="nav-controls">
+                <button id="prev-page" disabled>◀ Anterior</button>
+                <span>Pág.</span>
+                <input type="number" id="page-number" class="page-input" value="1" min="1" disabled>
+                <span id="total-pages">/ 0</span>
+                <button id="next-page" disabled>Próxima ▶</button>
+            </div>
+            <div class="action-buttons">
+                <button id="go-to-bookmark" style="background:#6f4f8f;">📍 Ir para marcador</button>
+            </div>
+        </div>
+        <div class="canvas-container" id="canvas-container">
+            <div id="pdf-canvas-wrapper" style="position: relative;">
+                <canvas id="pdf-canvas"></canvas>
+                <div id="text-layer" class="text-layer"></div>
+            </div>
+        </div>
+        <div class="status" id="status-message">✅ Selecione uma pasta com PDFs</div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</html>

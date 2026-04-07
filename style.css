@@ -1,0 +1,252 @@
+* {
+    box-sizing: border-box;
+    user-select: text; /* permitir seleção de texto */
+}
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1e1e2f;
+    color: #eef;
+    height: 100vh;
+    overflow: hidden;
+}
+/* Layout principal */
+.app {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+/* Sidebar esquerda (navegação + anotações) */
+.sidebar {
+    width: 300px;
+    background: #2d2d3a;
+    border-right: 1px solid #3e3e4e;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.3);
+    z-index: 2;
+}
+.sidebar-section {
+    padding: 1rem;
+    border-bottom: 1px solid #3e3e4e;
+}
+.sidebar-section h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+    color: #c0e0ff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.folder-btn {
+    background: #4a6fa5;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+.folder-btn:hover {
+    background: #2c4c7c;
+}
+.pdf-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+.pdf-list li {
+    padding: 8px 12px;
+    margin: 4px 0;
+    background: #3a3a48;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: 0.1s;
+}
+.pdf-list li:hover {
+    background: #5a6e8a;
+}
+.pdf-list li.active-pdf {
+    background: #6c8ebf;
+    font-weight: bold;
+    border-left: 4px solid #ffcc66;
+}
+.bookmarks-list, .highlights-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.bookmarks-list li, .highlights-list li {
+    background: #252530;
+    margin: 6px 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    word-break: break-word;
+    cursor: pointer;
+    transition: 0.1s;
+    border-left: 3px solid #ffaa55;
+}
+.highlights-list li {
+    border-left-color: #66cc99;
+}
+.bookmarks-list li:hover, .highlights-list li:hover {
+    background: #4a4a5a;
+    transform: translateX(2px);
+}
+.delete-anno {
+    float: right;
+    background: none;
+    border: none;
+    color: #ff8888;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0 4px;
+}
+.delete-anno:hover {
+    color: red;
+}
+.btn-add {
+    background: #3c6e47;
+    border: none;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    width: 100%;
+}
+/* Área do leitor */
+.viewer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #1a1a24;
+    overflow: hidden;
+    position: relative;
+}
+.toolbar {
+    background: #2a2a36;
+    padding: 12px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    border-bottom: 1px solid #444;
+    justify-content: space-between;
+}
+.pdf-title {
+    font-weight: bold;
+    font-size: 1rem;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.nav-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: #3a3a48;
+    padding: 5px 12px;
+    border-radius: 40px;
+}
+.nav-controls button {
+    background: #5f7f9e;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.nav-controls button:hover {
+    background: #3f6080;
+}
+.page-input {
+    width: 60px;
+    text-align: center;
+    background: #1e1e2a;
+    color: white;
+    border: 1px solid #5f7f9e;
+    border-radius: 12px;
+    padding: 4px;
+}
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+.action-buttons button {
+    background: #4f6f8f;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+}
+.canvas-container {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    background: #12121a;
+    position: relative;
+}
+#pdf-canvas-wrapper {
+    position: relative;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px black;
+}
+canvas {
+    opacity: 0.99;
+    display: block;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+.text-layer {
+    color: transparent; /* importante */
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    opacity: 0.9;
+    line-height: 1;
+    background: transparent;
+    pointer-events: auto;
+    transform-origin: 0% 0%;
+}
+.text-layer > span, .text-layer > div {
+    color: transparent;
+    position: absolute;
+    white-space: pre;
+    cursor: text;
+    transform-origin: 0% 0%;
+    background: transparent;
+}
+.text-layer ::selection {
+    background: rgba(255, 230, 100, 0.6);
+    color: black;
+}
+#text-layer span {
+    color: transparent;
+}
+.status {
+    padding: 8px;
+    text-align: center;
+    font-size: 0.8rem;
+    background: #2d2d3a;
+}

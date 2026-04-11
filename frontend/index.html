@@ -2,61 +2,75 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Leitor de PDF com Memória e Anotações</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-    </script>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitor de PDF - Autenticação</title>
+    <link rel="stylesheet" type="text/css" href="auth-style.css">
 </head>
 <body>
-<div class="app">
-    <div class="sidebar">
-        <div class="sidebar-section">
-            <h3>📁 Repositório Local</h3>
-            <button id="select-folder-btn" class="folder-btn">📂 Selecionar Pasta</button>
-            <div style="margin-top: 12px;">
-                <strong>📄 PDFs encontrados</strong>
-                <ul id="pdf-list" class="pdf-list"></ul>
+<div class="auth-container">
+    <div class="auth-box">
+        <div class="auth-header">
+            <h1>📖 Leitor de PDF</h1>
+            <p>Sincronize seus PDFs e citações na nuvem</p>
+        </div>
+        <div id="login-section" class="auth-section active">
+            <h2>Entrar</h2>
+            <form id="login-form" onsubmit="handleLoginSubmit(event)">
+                <div class="form-group">
+                    <label for="login-email">E-mail:</label>
+                    <input type="email" id="login-email" name="email" required placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Senha:</label>
+                    <input type="password" id="login-password" name="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Entrar</button>
+            </form>
+            <div class="auth-footer">
+                <p>Não tem uma conta? <a href="#" onclick="switchToRegister(event)">Cadastre-se aqui</a></p>
             </div>
+            <div id="login-error" class="error-message" style="display: none;"></div>
+            <div id="login-loading" class="loading-message" style="display: none;">Autenticando...</div>
         </div>
-        <div class="sidebar-section">
-            <h3>🔖 Marcadores (Bookmarks)</h3>
-            <button id="add-bookmark-btn" class="btn-add">➕ Adicionar marcador nesta página</button>
-            <ul id="bookmarks-list" class="bookmarks-list"></ul>
-        </div>
-        <div class="sidebar-section">
-            <h3>✍️ Trechos marcados</h3>
-            <button id="add-highlight-btn" class="btn-add">✨ Salvar trecho selecionado</button>
-            <ul id="highlights-list" class="highlights-list"></ul>
-            <div style="font-size: 0.7rem; margin-top: 8px; opacity: 0.7;">🔍 Selecione texto no PDF e clique em "Salvar trecho"</div>
-        </div>
-    </div>
-
-    <div class="viewer">
-        <div class="toolbar">
-            <div class="pdf-title" id="pdf-title">Nenhum PDF aberto</div>
-            <div class="nav-controls">
-                <button id="prev-page" disabled>◀ Anterior</button>
-                <span>Pág.</span>
-                <input type="number" id="page-number" class="page-input" value="1" min="1" disabled>
-                <span id="total-pages">/ 0</span>
-                <button id="next-page" disabled>Próxima ▶</button>
+        <div id="register-section" class="auth-section">
+            <h2>Criar Conta</h2>
+            <form id="register-form" onsubmit="handleRegisterSubmit(event)">
+                <div class="form-group">
+                    <label for="register-name">Nome Completo:</label>
+                    <input type="text" id="register-name" name="name" required placeholder="Seu Nome">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">E-mail:</label>
+                    <input type="email" id="register-email" name="email" required placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Senha:</label>
+                    <input type="password" id="register-password" name="password" required placeholder="••••••••" minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="register-password-confirm">Confirmar Senha:</label>
+                    <input type="password" id="register-password-confirm" name="password_confirm" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Cadastrar</button>
+            </form>
+            <div class="auth-footer">
+                <p>Já tem uma conta? <a href="#" onclick="switchToLogin(event)">Faça login aqui</a></p>
             </div>
-            <div class="action-buttons">
-                <button id="go-to-bookmark" style="background:#6f4f8f;">📍 Ir para marcador</button>
-            </div>
+            <div id="register-error" class="error-message" style="display: none;"></div>
+            <div id="register-loading" class="loading-message" style="display: none;">Criando conta...</div>
         </div>
-        <div class="canvas-container" id="canvas-container">
-            <div id="pdf-canvas-wrapper" style="position: relative;">
-                <canvas id="pdf-canvas"></canvas>
-                <div id="text-layer" class="text-layer"></div>
-            </div>
+        <div class="features">
+            <h3>Recursos</h3>
+            <ul>
+                <li>✅ Leia PDFs com sincronização automática</li>
+                <li>✅ Salve citações e marcadores</li>
+                <li>✅ Acesse seus dados em qualquer lugar</li>
+                <li>✅ Exporte citações em múltiplos formatos</li>
+            </ul>
         </div>
-        <div class="status" id="status-message">✅ Selecione uma pasta com PDFs</div>
     </div>
 </div>
 
-<script src="script.js"></script>
+<script src="auth.js"></script>
+</body>
 </html>

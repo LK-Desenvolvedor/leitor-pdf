@@ -2,11 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
+const readingProgressRoutes = require('./routes/readingProgressRoutes');
+const citationRoutes = require('./routes/citationRoutes');
+const exportRoutes = require('./routes/exportRoutes');
 require('dotenv').config();
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:8081'];
+const allowedOrigins = process.env.CORS_ORIGINS;
+
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -27,6 +31,9 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', authRoutes);
+app.use('/api/reading-progress', readingProgressRoutes);
+app.use('/api/citations', citationRoutes);
+app.use('/api/export', exportRoutes);
 
 const dbURI = process.env.DB_URI;
 

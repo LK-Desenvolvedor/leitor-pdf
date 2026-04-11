@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Leitor de PDF com Memória, Anotações e Citações</title>
+    <script src="./libs/pdf/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = './libs/pdf/pdf.worker.min.js';
+    </script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<div class="app">
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <h3>📁 Repositório Local</h3>
+            <button id="select-folder-btn" class="folder-btn">📂 Selecionar Pasta</button>
+            <div style="margin-top: 12px;">
+                <strong>📄 PDFs encontrados</strong>
+                <ul id="pdf-list" class="pdf-list"></ul>
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <h3>🔖 Marcadores</h3>
+            <button id="add-bookmark-btn" class="btn-add">➕ Adicionar marcador</button>
+            <ul id="bookmarks-list" class="bookmarks-list"></ul>
+        </div>
+        <div class="sidebar-section">
+            <h3>✍️ Citações</h3>
+            <button id="add-citation-btn" class="btn-add">✨ Salvar citação</button>
+            <div style="margin-top: 8px; display: flex; gap: 4px;">
+                <button id="export-citations-btn" class="btn-small" title="Exportar citações selecionadas">📥 Exportar</button>
+                <button id="manage-citations-btn" class="btn-small" title="Gerenciar citações">⚙️ Gerenciar</button>
+            </div>
+            <ul id="citations-list" class="citations-list"></ul>
+        </div>
+    </div>
+
+    <div class="viewer">
+        <div class="toolbar">
+            <div class="pdf-title" id="pdf-title">Nenhum PDF aberto</div>
+            <div class="reading-mode-selector">
+                <label>
+                    <input type="radio" name="reading-mode" value="pagination" checked> Paginação
+                </label>
+                <label>
+                    <input type="radio" name="reading-mode" value="scroll"> Scroll
+                </label>
+            </div>
+            <div class="nav-controls">
+                <button id="prev-page" disabled>◀ Anterior</button>
+                <span>Pág.</span>
+                <input type="number" id="page-number" class="page-input" value="1" min="1" disabled>
+                <span id="total-pages">/ 0</span>
+                <button id="next-page" disabled>Próxima ▶</button>
+            </div>
+            <div class="action-buttons">
+                <button id="zoom-in-btn" title="Aumentar zoom">🔍+</button>
+                <button id="zoom-out-btn" title="Diminuir zoom">🔍-</button>
+                <button id="reset-zoom-btn" title="Resetar zoom">↺</button>
+                <button id="logout-btn" title="Sair da conta">👤 Sair</button>
+            </div>
+        </div>
+        <div class="canvas-container" id="canvas-container">
+            <div id="pdf-canvas-wrapper" style="position: relative;">
+                <canvas id="pdf-canvas"></canvas>
+                <div id="text-layer" class="text-layer"></div>
+            </div>
+        </div>
+        <div class="status" id="status-message">✅ Selecione uma pasta com PDFs</div>
+    </div>
+</div>
+
+<!-- Modal para gerenciar citações -->
+<div id="citations-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Gerenciar Citações</h2>
+            <button class="modal-close" id="close-citations-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="citations-controls">
+                <button id="select-all-citations-btn" class="btn-small">Selecionar Tudo</button>
+                <button id="deselect-all-citations-btn" class="btn-small">Desselecionar Tudo</button>
+                <button id="delete-selected-citations-btn" class="btn-small" style="background: #c44;">Deletar Selecionadas</button>
+            </div>
+            <div id="citations-list-modal" class="citations-list-modal"></div>
+        </div>
+        <div class="modal-footer">
+            <div class="export-options">
+                <label>Formato: 
+                    <select id="export-format">
+                        <option value="txt">TXT</option>
+                        <option value="pdf">PDF</option>
+                        <option value="docx">DOCX</option>
+                    </select>
+                </label>
+                <label>Estilo: 
+                    <select id="export-style">
+                        <option value="ABNT">ABNT</option>
+                        <option value="APA">APA</option>
+                        <option value="Vancouver">Vancouver</option>
+                        <option value="MLA">MLA</option>
+                        <option value="Chicago">Chicago</option>
+                        <option value="IEEE">IEEE</option>
+                    </select>
+                </label>
+                <button id="do-export-btn" class="btn-add">📥 Exportar Selecionadas</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="edit-citation-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Editar Citação</h2>
+            <button class="modal-close" id="close-edit-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <label>Texto:</label>
+            <textarea id="edit-citation-text" style="width: 100%; height: 80px; padding: 8px; border: 1px solid #444; border-radius: 4px; background: #2a2a36; color: #eef;"></textarea>
+            <label style="margin-top: 12px;">Notas:</label>
+            <textarea id="edit-citation-notes" style="width: 100%; height: 60px; padding: 8px; border: 1px solid #444; border-radius: 4px; background: #2a2a36; color: #eef;"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button id="save-edit-citation-btn" class="btn-add">💾 Salvar</button>
+            <button id="cancel-edit-citation-btn" class="btn-small">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script src="sync-service.js"></script>
+<script src="citations-modal.js"></script>
+<script src="reader.js"></script>
+</body>
+</html>

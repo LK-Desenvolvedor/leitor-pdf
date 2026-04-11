@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-    user-select: text; /* permitir seleção de texto */
+    user-select: text;
 }
 body {
     margin: 0;
@@ -10,13 +10,11 @@ body {
     height: 100vh;
     overflow: hidden;
 }
-/* Layout principal */
 .app {
     display: flex;
     height: 100vh;
     width: 100%;
 }
-/* Sidebar esquerda (navegação + anotações) */
 .sidebar {
     width: 300px;
     background: #2d2d3a;
@@ -81,12 +79,12 @@ body {
     font-weight: bold;
     border-left: 4px solid #ffcc66;
 }
-.bookmarks-list, .highlights-list {
+.bookmarks-list, .highlights-list, .citations-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
-.bookmarks-list li, .highlights-list li {
+.bookmarks-list li, .highlights-list li, .citations-list li {
     background: #252530;
     margin: 6px 0;
     padding: 8px 10px;
@@ -96,11 +94,17 @@ body {
     cursor: pointer;
     transition: 0.1s;
     border-left: 3px solid #ffaa55;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .highlights-list li {
     border-left-color: #66cc99;
 }
-.bookmarks-list li:hover, .highlights-list li:hover {
+.citations-list li {
+    border-left-color: #ff99cc;
+}
+.bookmarks-list li:hover, .highlights-list li:hover, .citations-list li:hover {
     background: #4a4a5a;
     transform: translateX(2px);
 }
@@ -128,7 +132,18 @@ body {
     font-size: 0.8rem;
     width: 100%;
 }
-/* Área do leitor */
+.btn-small {
+    background: #4a5a6a;
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+.btn-small:hover {
+    background: #5a6a7a;
+}
 .viewer {
     flex: 1;
     display: flex;
@@ -154,6 +169,24 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.reading-mode-selector {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    background: #3a3a48;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+.reading-mode-selector label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.reading-mode-selector input[type="radio"] {
+    cursor: pointer;
 }
 .nav-controls {
     display: flex;
@@ -196,6 +229,9 @@ body {
     color: white;
     cursor: pointer;
 }
+.action-buttons button:hover {
+    background: #3f5f7f;
+}
 .canvas-container {
     flex: 1;
     overflow: auto;
@@ -216,7 +252,7 @@ canvas {
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 .text-layer {
-    color: transparent; /* importante */
+    color: transparent;
     position: absolute;
     left: 0;
     top: 0;
@@ -249,4 +285,129 @@ canvas {
     text-align: center;
     font-size: 0.8rem;
     background: #2d2d3a;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: #2d2d3a;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #3e3e4e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+.modal-close {
+    background: none;
+    border: none;
+    color: #eef;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+.modal-footer {
+    padding: 20px;
+    border-top: 1px solid #3e3e4e;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+.citations-controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+.citations-list-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.citation-item-modal {
+    background: #252530;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 3px solid #ff99cc;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+.citation-item-modal input[type="checkbox"] {
+    margin-top: 4px;
+    cursor: pointer;
+}
+.citation-item-modal-content {
+    flex: 1;
+}
+.citation-item-modal-text {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+.citation-item-modal-page {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+.export-options {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.export-options label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.export-options select {
+    background: #3a3a48;
+    color: #eef;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.scroll-mode #pdf-canvas-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+}
+.scroll-mode canvas {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    box-shadow: none;
+}
+.scroll-mode .text-layer {
+    width: 100%;
+    height: auto;
+}
+.scroll-mode .nav-controls {
+    display: none;
 }
